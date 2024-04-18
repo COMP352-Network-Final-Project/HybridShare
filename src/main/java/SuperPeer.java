@@ -14,11 +14,11 @@ public class SuperPeer {
     private void startServer(int port) {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            System.out.println("SuperPeer started on port " + port);
+            System.out.println("SuperPeer started on port " + port + " " + serverSocket.getInetAddress());
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("New peer connected: " + clientSocket.getInetAddress().getCanonicalHostName());
+                System.out.println("New peer connected: " + clientSocket.getInetAddress() + " " + clientSocket.getPort());
                 PeerHandler peerHandler = new PeerHandler(clientSocket, this);
                 peerHandlers.put(clientSocket.getInetAddress().getHostAddress(), peerHandler);
                 Thread thread = new Thread(peerHandler);

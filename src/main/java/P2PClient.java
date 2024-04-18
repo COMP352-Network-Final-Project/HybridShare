@@ -7,7 +7,6 @@ public class P2PClient {
             // Server's address and port
             InetAddress serverAddress = InetAddress.getByName(args[0]);
             int serverPort = Integer.parseInt(args[1]);
-            String [] Files_has = args[2];
 
             // Create server sockets with port 0 to let the OS choose an available port
             ServerSocket serverSocketA = new ServerSocket(0);

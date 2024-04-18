@@ -10,7 +10,7 @@ public class Client implements Runnable {
 
     private String [] Files_has;
     private String [] Files_wants;
-    public Client(String peerAddress, int port, String [] files_has, String [] files_wants){
+    public Client(String peerAddress, int port){
         this.port = port;
         this.peerAddress = peerAddress;
     }

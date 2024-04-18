@@ -25,10 +25,12 @@ public class PeerHandler implements Runnable {
     public void run() {
         try {
             String message;
+
             while ((message = in.readLine()) != null) {
 
 
                 try {
+                    String clientIP = socket.getInetAddress().getHostAddress();
                     String messageString = message.toString();
                     String[] parsed = messageString.split(";");
                     if(parsed.length == 2) {
@@ -37,7 +39,7 @@ public class PeerHandler implements Runnable {
                         Socket outSocket = new Socket("0.0.0.0", port);
                         PrintWriter outWriter = new PrintWriter(outSocket.getOutputStream(), true);
                         outWriter.println(forwardedMessage);
-                        System.out.println("Message forwarded to peer: " + port + " " + message);
+                        System.out.println("Message forwarded to peer: " + port + " " + parsed[1]);
                     }else{
                         System.out.println("Message from peer: " + message);
                     }
