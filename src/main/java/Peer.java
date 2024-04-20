@@ -2,11 +2,12 @@ public class Peer implements Runnable {
     public int serverPort;
     public int clientPort;
     private String peerAddress;
-
-    public Peer(int serverPort, String peerAddress, int clientPort) {
+    public String [] files;
+    public Peer(int serverPort, String peerAddress, int clientPort, String fileH, String fileW) {
         this.serverPort = serverPort;
         this.clientPort = clientPort;
         this.peerAddress = peerAddress;
+        this.files = new String[]{fileH, fileW};
     }
 
     public void run() {
@@ -15,8 +16,9 @@ public class Peer implements Runnable {
             serverThread.start();
             Thread.sleep(5000);
 
-            Thread clientThread = new Thread(new Client(peerAddress, clientPort));
+            Thread clientThread = new Thread(new Client(peerAddress, clientPort, files));
             clientThread.start();
+
 
             serverThread.join();
             clientThread.join();

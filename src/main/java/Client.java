@@ -3,16 +3,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
+import java.util.concurrent.*;
 public class Client implements Runnable {
     private int port;
     private String peerAddress;
 
-    private String [] Files_has;
-    private String [] Files_wants;
-    public Client(String peerAddress, int port){
+
+    public String [] files;
+    public Client(String peerAddress, int port, String [] files) {
         this.port = port;
         this.peerAddress = peerAddress;
+        this.files = files;
+
     }
     public void run() {
         try {
@@ -21,6 +23,21 @@ public class Client implements Runnable {
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+
+            Runnable sendMessageTask = () -> {
+                try {
+                    String messageH = socket.getInetAddress().toString() +  " HAS " + files[0];
+                    String messageW = socket.getInetAddress().toString() +  " WANTS " + files[1];
+                    out.println(messageH);
+                    out.println(messageW);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            };
+
+            executor.scheduleAtFixedRate(sendMessageTask, 0, 5, TimeUnit.SECONDS);
 
             String message;
             while ((message = userInput.readLine()) != null) {
@@ -34,4 +51,5 @@ public class Client implements Runnable {
             e.printStackTrace();
         }
     }
+
 }
