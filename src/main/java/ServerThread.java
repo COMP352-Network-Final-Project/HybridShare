@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-]
 
 
 
@@ -51,7 +50,7 @@ public class ServerThread implements Runnable {
 
     }
     private void handleNeeds(String ip, String file) throws IOException{
-        Socket p2pSocket = new Socket(ip.substring(1),12346);
+        Socket p2pSocket = new Socket(ip.substring(1),12345);
         sendFile(p2pSocket, file);
     }
 
