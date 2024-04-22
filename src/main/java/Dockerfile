@@ -3,6 +3,8 @@ FROM openjdk:11
 
 RUN apt-get update && \ 
     apt-get install -y net-tools && \ 
+    apt-get install -y jp2a && \
+    apt-get install -y fim && \
     apt-get clean
 
     
@@ -12,3 +14,4 @@ WORKDIR /usr/src/app
 COPY *.class .
 COPY *.java .
 COPY *.txt . 
+COPY *.JPG .

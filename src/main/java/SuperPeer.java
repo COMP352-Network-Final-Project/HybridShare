@@ -1,16 +1,14 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class SuperPeer {
     private Map<String, PeerHandler> peerHandlers = new HashMap<>();
     private Map<String, ArrayList<String>> allAvailableFiles = new HashMap<>();
     private Map<String, ArrayList<String>> allWantedFiles = new HashMap<>();
-
+    private Set<String> processedPairs = new HashSet<>();
     public SuperPeer() {
         startServer(12347);
     }
@@ -55,9 +53,12 @@ public class SuperPeer {
 
                     for (String file : has) {
                         if (otherWants.contains(file)) {
-                            System.out.println(ipAddress + " has " + file + " and " + otherIp + " wants it.");
-                            establishP2PConnection(ipAddress, otherIp, file);
-                            return;
+                            String pair = ipAddress + ":" + otherIp + ":" + file;
+                            if (!processedPairs.contains(pair)) {
+                                System.out.println(ipAddress + " has " + file + " and " + otherIp + " wants it.");
+                                establishP2PConnection(ipAddress, otherIp, file);
+                                processedPairs.add(pair);
+                            }
                         }
                     }
                 }
@@ -77,8 +78,8 @@ public class SuperPeer {
             Socket peerSocket = new Socket(ipAddress2.substring(1), p2pPort);
             System.out.println("Informing " + ipAddress2 + " of P2P connection with " + ipAddress1);
 
-            String message1 = "IP " + ipAddress2 + " NEEDS " + file;
-            String message2 = "IP " + ipAddress1 + " HAS " + file;
+            String message1 = "WANTS " + ipAddress2 + " " + file;
+            String message2 = "HAS " + ipAddress1 + " " + file;
 
             PrintWriter out1 = new PrintWriter(clientSocket.getOutputStream(), true);
             PrintWriter out2 = new PrintWriter(peerSocket.getOutputStream(), true);
@@ -94,17 +95,7 @@ public class SuperPeer {
     }
 
 
-    private void receiveMessages(Socket socket) {
-        try {
-            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-            while (true) {
-                Object message = inputStream.readObject();
-                System.out.println("Received message: " + message);
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public static void printMap(Map<?, ?> map, String sep) {
         for (Map.Entry<?, ?> entry : map.entrySet()) {

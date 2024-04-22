@@ -28,8 +28,8 @@ public class Client implements Runnable {
 
             Runnable sendMessageTask = () -> {
                 try {
-                    String messageH = socket.getInetAddress().toString() +  " HAS " + files[0];
-                    String messageW = socket.getInetAddress().toString() +  " WANTS " + files[1];
+                    String messageH = "HAS " + socket.getInetAddress().toString() +  " " + files[0];
+                    String messageW = "WANTS " + socket.getInetAddress().toString() +  " " + files[1];
                     out.println(messageH);
                     out.println(messageW);
                 } catch (Exception e) {

@@ -38,8 +38,8 @@ public class PeerHandler implements Runnable {
                 try {
                     String[] parts = message.split(" ");
                     if (parts.length == 3) {
-                        String ipAddress = parts[0];
-                        String action = parts[1];
+                        String ipAddress = parts[1];
+                        String action = parts[0];
                         String filename = parts[2];
 
                         if (action.equals("HAS")) {
