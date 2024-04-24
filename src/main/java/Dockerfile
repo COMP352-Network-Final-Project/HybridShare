@@ -1,4 +1,3 @@
-# Dockerfile for Java application
 FROM openjdk:11
 
 RUN apt-get update && \ 
@@ -10,8 +9,17 @@ RUN apt-get update && \
     
 WORKDIR /usr/src/app
 
-# Copy compiled Java classes to the container
+RUN mkdir share
+
+RUN apt install -y --no-install-recommends \
+        tigervnc-standalone-server \
+        tigervnc-common \
+        dbus-x11 \
+        novnc \
+        net-tools \
+ && cp /usr/share/novnc/vnc.html /usr/share/novnc/index.html
+
+COPY ./share share
 COPY *.class .
 COPY *.java .
-COPY *.txt . 
-COPY *.JPG .
+

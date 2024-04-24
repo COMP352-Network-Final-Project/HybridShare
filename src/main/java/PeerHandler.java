@@ -38,7 +38,6 @@ public class PeerHandler implements Runnable {
                 try {
                     String[] parts = message.split(" ");
                     if (parts.length == 3) {
-                        String ipAddress = parts[1];
                         String action = parts[0];
                         String filename = parts[2];
 
@@ -53,7 +52,6 @@ public class PeerHandler implements Runnable {
 
                         sendFilesToSuperPeer();
                         superPeer.findPairings();
-
 
                     } else {
                         System.out.println("Invalid message format: " + message);

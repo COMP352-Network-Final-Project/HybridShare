@@ -1,24 +1,33 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.*;
 public class Client implements Runnable {
     private int port;
-    private String peerAddress;
+    private String serverAddress;
 
 
-    public String [] files;
-    public Client(String peerAddress, int port, String [] files) {
+    public String file;
+
+    /**
+     *
+     * @param serverAddress the IP address of the SuperPeer to connect to
+     * @param port the Port number of the server to connect to
+     * @param file the file that this client wants to receive
+     */
+    public Client(String serverAddress, int port, String file) {
         this.port = port;
-        this.peerAddress = peerAddress;
-        this.files = files;
+        this.serverAddress = serverAddress;
+        this.file= file;
 
     }
+
+    /**
+     * main running body of the Client class where the wanted and available files are sent to the SuperPeer
+     * this is done automatically every 8 seconds
+     */
     public void run() {
         try {
-            Socket socket = new Socket(peerAddress, port);
+            Socket socket = new Socket(serverAddress, port);
 
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -28,16 +37,29 @@ public class Client implements Runnable {
 
             Runnable sendMessageTask = () -> {
                 try {
-                    String messageH = "HAS " + socket.getInetAddress().toString() +  " " + files[0];
-                    String messageW = "WANTS " + socket.getInetAddress().toString() +  " " + files[1];
-                    out.println(messageH);
+                    String currentDirectory = System.getProperty("user.dir");
+                    currentDirectory = currentDirectory +"/share";
+                    File directory = new File(currentDirectory);
+
+                    // Get an array of all files in the directory
+                    String[] files = directory.list();
+
+                    // Print the filenames
+                    if (files != null) {
+                        for (String filename : files) {
+                            String messageH = "HAS " + socket.getInetAddress().toString() +  " " + filename;
+                            out.println(messageH);
+                        }
+                    }
+                    String messageW = "WANTS " + socket.getInetAddress().toString() +  " " + file;
+
                     out.println(messageW);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             };
 
-            executor.scheduleAtFixedRate(sendMessageTask, 0, 5, TimeUnit.SECONDS);
+            executor.scheduleAtFixedRate(sendMessageTask, 0, 8, TimeUnit.SECONDS);
 
             String message;
             while ((message = userInput.readLine()) != null) {
@@ -51,5 +73,4 @@ public class Client implements Runnable {
             e.printStackTrace();
         }
     }
-
 }

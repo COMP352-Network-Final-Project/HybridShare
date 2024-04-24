@@ -16,7 +16,7 @@ public class SuperPeer {
     private void startServer(int port) {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            System.out.println("SuperPeer started on port " + port + " " + serverSocket.getInetAddress());
+            System.out.println("SuperPeer started on port " + port);
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();

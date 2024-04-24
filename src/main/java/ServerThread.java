@@ -35,7 +35,7 @@ public class ServerThread implements Runnable {
                 if (newlineIndex != -1) {
                     imageData = Arrays.copyOfRange(imageData, newlineIndex + 1, imageData.length);
                 }
-                try (FileOutputStream fos = new FileOutputStream(filename)) {
+                try (FileOutputStream fos = new FileOutputStream("share/"+filename)) {
                     fos.write(imageData);
                 }
 
@@ -61,7 +61,7 @@ public class ServerThread implements Runnable {
     }
     private void sendFile(Socket socket, String filePath) {
         try {
-            File file = new File(filePath);
+            File file = new File("share/"+filePath);
             byte[] buffer = new byte[(int) file.length()];
             FileInputStream fileInputStream = new FileInputStream(file);
             BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
