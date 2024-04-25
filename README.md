@@ -5,8 +5,8 @@ A Hybrid-P2P File Sharing Program
 
 ### Docker:
 
-This application is best run through Docker containers.
-To run the demo move to the java directory and run 
+This application is best demonstrated through Docker containers.
+To build the image and run the demo move to the java directory and run 
 'docker build -t hybridshare .' 
 to create the image used for running the SuperPeer and Peers
 
@@ -25,8 +25,12 @@ Then, in a new terminal for each client, run
 
 The Demo works best with 2 clients
 For each client container, run the command:
-'java BasicP2P <p2pPort> <superPort> <superIP> <File Client Owns> <File Client Needs>'
+'java BasicP2P <superPort> <superIP> <File Client Needs>'
 
 for two example clients this would look like this:
-java BasicP2P 12345 12347 172.17.0.2 FileB.txt FileA.txt
-java BasicP2P 12346 12347 172.17.0.2 FileA.txt FileB.txt
+java BasicP2P 12347 172.17.0.2 FileB.txt 
+java BasicP2P 12347 172.17.0.2 FileA.txt 
+
+The filepaths that are in the /share directory will automatically be forwarded 
+to the Super Peer and matched accordingly. For demonstration purposes try 
+removing some of the files and sending them from on peer to another.
