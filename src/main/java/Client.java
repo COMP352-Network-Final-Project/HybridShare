@@ -9,7 +9,6 @@ public class Client implements Runnable {
     public String file;
 
     /**
-     *
      * @param serverAddress the IP address of the SuperPeer to connect to
      * @param port the Port number of the server to connect to
      * @param file the file that this client wants to receive

@@ -16,6 +16,12 @@ public class PeerHandler implements Runnable {
     private Map<String, ArrayList<String>> wantedFiles = new HashMap<>();
     private String clientIP;
 
+    /**
+     *
+     * @param socket inherited socket from the superpeer that has the connection to the peer
+     * @param superPeer reference to the superpeer
+     * @param clientIP IP address of the client that is associated with this peer handler
+     */
     public PeerHandler(Socket socket, SuperPeer superPeer, String clientIP) {
         this.socket = socket;
         this.superPeer = superPeer;
@@ -29,6 +35,11 @@ public class PeerHandler implements Runnable {
         }
     }
 
+    /**
+     * main running body of the peer handler class that process the file names that are sent from
+     * the peers, when they receive a file name they add the name and IP address of the peer to a
+     * map and send it up to the superpeer
+     */
     @Override
     public void run() {
         try {
@@ -72,9 +83,22 @@ public class PeerHandler implements Runnable {
             }
         }
     }
+
+    /**
+     * Sends all the available and wanted files supplied by the connected peer back
+     * up to the super peer
+     */
     public void sendFilesToSuperPeer() {
         superPeer.receiveFiles(availableFiles, wantedFiles, clientIP);
     }
+
+    /**
+     *
+     * @param ipAddress IP of the client that owns this file
+     * @param filename name of the file that is owned
+     *
+     *  this method also checks to make sure that this entry is not already entered
+     */
     public synchronized void addAvailableFile(String ipAddress, String filename) {
         if (!availableFiles.containsKey(ipAddress)) {
             availableFiles.put(ipAddress, new ArrayList<>());
@@ -85,6 +109,13 @@ public class PeerHandler implements Runnable {
         }
     }
 
+    /**
+     *
+     * @param ipAddress IP of the client that needs the file
+     * @param filename the name of the file needed
+     *
+     *  this method also checks to make sure this entry is not already entered
+     */
     public synchronized void addWantedFile(String ipAddress, String filename) {
         if (!wantedFiles.containsKey(ipAddress)) {
             wantedFiles.put(ipAddress, new ArrayList<>());
@@ -94,5 +125,4 @@ public class PeerHandler implements Runnable {
             files.add(filename);
         }
     }
-
 }
